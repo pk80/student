@@ -16,4 +16,9 @@ func main() {
 
 	//concatinating two variables with another string constraing
 	fmt.Println("Golang is designed by", fname, lname, "in 2007.")
+
+	//escape character
+	fmt.Println("This language was also designed by \nRob Pik\nKen Thompson")  //next line
+	fmt.Println("This language was also designed by \tRob Pik \tKen Thompson") //tab space
+	fmt.Println("This language was also designed by \aRob Pik \aKen Thompson") //slips the character
 }
