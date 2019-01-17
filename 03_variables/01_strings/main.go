@@ -7,8 +7,7 @@ func main() {
 	var fname string
 	//assigning value to a string variable
 	fname = "Robert"
-	//printing out the variable value
-	fmt.Println(fname)
+	fmt.Println(fname) //printing out the variable value
 
 	//shorthand declare and initialize value to a string
 	lname := "Griesemer"
