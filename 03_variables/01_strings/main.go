@@ -10,9 +10,13 @@ func main() {
 	//printing out the variable value
 	fmt.Println(fname)
 
-	//shorthand declare and assign value to a string
+	//shorthand declare and initialize value to a string
 	lname := "Griesemer"
 	fmt.Println(lname)
+
+	//shorhand declare and initialize multiple variables
+	name, email := "Robert G", "robert@email.com"
+	fmt.Println(name, email)
 
 	//concatinating two variables with another string constraing
 	fmt.Println("Golang is designed by", fname, lname, "in 2007.")
