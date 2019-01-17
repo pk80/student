@@ -33,7 +33,10 @@ func main() {
 
 	// uint uint8 uint16 uint32 uint64 uintptr  - unsigned int
 	// byte - alias for uint
-	// rune - alias for int
+
+	// rune - alias for int32
+	var runes rune = 23
+	fmt.Printf("Rune, %T : %v\n", runes, runes)
 
 	// float32 float64 - usually used float64
 	height1 := 1.3 //by default it's a float64
