@@ -1,0 +1,29 @@
+---
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: Greeting Server
+  description: Greetings to the user
+
+host: localhost:8080
+basePath: /
+
+paths:
+  /hello:
+    get:
+      produces:
+        - text/plain
+      summary: Produces plain text
+      parameters:
+        - name: name
+          required: false
+          type: string
+          in: query
+      operationId: getGreeting
+      responses:
+        200:
+          description: returns a greeting
+          schema:
+            type: string
+            description: contains the actual greeting as text
+    
