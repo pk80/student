@@ -11,37 +11,39 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/validate"
 
 	strfmt "github.com/go-openapi/strfmt"
 )
 
-// NewGetGreetingParams creates a new GetGreetingParams object
+// NewGetCustomerParams creates a new GetCustomerParams object
 // no default values defined in spec.
-func NewGetGreetingParams() GetGreetingParams {
+func NewGetCustomerParams() GetCustomerParams {
 
-	return GetGreetingParams{}
+	return GetCustomerParams{}
 }
 
-// GetGreetingParams contains all the bound params for the get greeting operation
+// GetCustomerParams contains all the bound params for the get customer operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters getGreeting
-type GetGreetingParams struct {
+// swagger:parameters getCustomer
+type GetCustomerParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
 	/*
+	  Required: true
 	  In: query
 	*/
-	Name *string
+	Name string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetGreetingParams() beforehand.
-func (o *GetGreetingParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetCustomerParams() beforehand.
+func (o *GetCustomerParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -60,19 +62,22 @@ func (o *GetGreetingParams) BindRequest(r *http.Request, route *middleware.Match
 }
 
 // bindName binds and validates parameter Name from query.
-func (o *GetGreetingParams) bindName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetCustomerParams) bindName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("name", "query")
+	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: false
+	// Required: true
 	// AllowEmptyValue: false
-	if raw == "" { // empty values pass all other validations
-		return nil
+	if err := validate.RequiredString("name", "query", raw); err != nil {
+		return err
 	}
 
-	o.Name = &raw
+	o.Name = raw
 
 	return nil
 }

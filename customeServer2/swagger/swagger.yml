@@ -1,8 +1,13 @@
 ---
 swagger: '2.0'
 info:
-  title: Greeting
+  title: Customer
   version: '0.0.1'
+
+produces:
+ - application/json
+consumes:
+  -  application/json
 
 host: localhost:8080
 basePath: /
@@ -13,10 +18,8 @@ paths:
         - name: name
           in: query
           type: string
-          required: false
-      produces:
-        - text/plain
-      operationId: getGreeting
+          required: true
+      operationId: getCustomer
       description: Display the greeting name
       responses:
         200:
@@ -32,7 +35,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/customer'
-      operationId: postGreeting
+      operationId: postCustomer
       produces:
         - text/plain
       responses:

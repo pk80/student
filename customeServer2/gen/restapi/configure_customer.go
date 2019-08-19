@@ -13,13 +13,13 @@ import (
 	"github.com/pk80/student/customeServer2/gen/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../gen --name Greeter --spec ../../swagger/swagger.yml --exclude-main
+//go:generate swagger generate server --target ../../gen --name Customer --spec ../../swagger/swagger.yml
 
-func configureFlags(api *operations.GreeterAPI) {
+func configureFlags(api *operations.CustomerAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.GreeterAPI) http.Handler {
+func configureAPI(api *operations.CustomerAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -31,11 +31,18 @@ func configureAPI(api *operations.GreeterAPI) http.Handler {
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
+	api.JSONProducer = runtime.JSONProducer()
+
 	api.TxtProducer = runtime.TextProducer()
 
-	if api.GetGreetingHandler == nil {
-		api.GetGreetingHandler = operations.GetGreetingHandlerFunc(func(params operations.GetGreetingParams) middleware.Responder {
-			return middleware.NotImplemented("operation .GetGreeting has not yet been implemented")
+	if api.GetCustomerHandler == nil {
+		api.GetCustomerHandler = operations.GetCustomerHandlerFunc(func(params operations.GetCustomerParams) middleware.Responder {
+			return middleware.NotImplemented("operation .GetCustomer has not yet been implemented")
+		})
+	}
+	if api.PostCustomerHandler == nil {
+		api.PostCustomerHandler = operations.PostCustomerHandlerFunc(func(params operations.PostCustomerParams) middleware.Responder {
+			return middleware.NotImplemented("operation .PostCustomer has not yet been implemented")
 		})
 	}
 

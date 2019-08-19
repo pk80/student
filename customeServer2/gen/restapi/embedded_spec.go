@@ -18,9 +18,15 @@ var (
 
 func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "swagger": "2.0",
   "info": {
-    "title": "Greeting",
+    "title": "Customer",
     "version": "0.0.1"
   },
   "host": "localhost:8080",
@@ -29,15 +35,13 @@ func init() {
     "/hello": {
       "get": {
         "description": "Display the greeting name",
-        "produces": [
-          "text/plain"
-        ],
-        "operationId": "getGreeting",
+        "operationId": "getCustomer",
         "parameters": [
           {
             "type": "string",
             "name": "name",
-            "in": "query"
+            "in": "query",
+            "required": true
           }
         ],
         "responses": {
@@ -50,13 +54,55 @@ func init() {
           }
         }
       }
+    },
+    "/new": {
+      "post": {
+        "produces": [
+          "text/plain"
+        ],
+        "operationId": "postCustomer",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/customer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Customer posted"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "customer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
     }
   }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "swagger": "2.0",
   "info": {
-    "title": "Greeting",
+    "title": "Customer",
     "version": "0.0.1"
   },
   "host": "localhost:8080",
@@ -65,15 +111,13 @@ func init() {
     "/hello": {
       "get": {
         "description": "Display the greeting name",
-        "produces": [
-          "text/plain"
-        ],
-        "operationId": "getGreeting",
+        "operationId": "getCustomer",
         "parameters": [
           {
             "type": "string",
             "name": "name",
-            "in": "query"
+            "in": "query",
+            "required": true
           }
         ],
         "responses": {
@@ -84,6 +128,42 @@ func init() {
               "type": "string"
             }
           }
+        }
+      }
+    },
+    "/new": {
+      "post": {
+        "produces": [
+          "text/plain"
+        ],
+        "operationId": "postCustomer",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/customer"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Customer posted"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "customer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
         }
       }
     }
