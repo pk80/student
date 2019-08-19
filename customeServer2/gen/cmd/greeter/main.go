@@ -5,45 +5,45 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/go-openapi/loads"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
-	"github.com/pk80/student/customeServer/gen/restapi"
-	"github.com/pk80/student/customeServer/gen/restapi/operations"
+
+	"github.com/go-openapi/loads"
+	"github.com/pk80/student/customeServer2/gen/restapi"
+	"github.com/pk80/student/customeServer2/gen/restapi/operations"
 )
 
-var portFlag = flag.Int("port", 8080, "Port to run this service on")
+var portFlag = flag.Int("port", 8080, "Port to us this")
 
 func main() {
-	// load embedded swagger file
+	//load embedded swagger file
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// create new service API
+	//create new  service api
 	api := operations.NewGreeterAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
-	// parse flags
+	//parse flags
 	flag.Parse()
-	// set the port this service will be run on
+	//set the port this service will run on
 	server.Port = *portFlag
 
-	// TODO: Set Handle
+	//Handlers
 	api.GetGreetingHandler = operations.GetGreetingHandlerFunc(
 		func(params operations.GetGreetingParams) middleware.Responder {
 			name := swag.StringValue(params.Name)
 			if name == "" {
 				name = "World"
 			}
-
-			greeting := fmt.Sprintf("Hello, %s!", name)
+			greeting := fmt.Sprintf("Hello,%s!", name)
 			return operations.NewGetGreetingOK().WithPayload(greeting)
 		})
 
-	// serve API
+	//serve API
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)
 	}

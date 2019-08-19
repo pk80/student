@@ -1,0 +1,49 @@
+---
+swagger: '2.0'
+info:
+  title: Greeting
+  version: '0.0.1'
+
+host: localhost:8080
+basePath: /
+paths:
+  /hello:
+    get:
+      parameters:
+        - name: name
+          in: query
+          type: string
+          required: false
+      produces:
+        - text/plain
+      operationId: getGreeting
+      description: Display the greeting name
+      responses:
+        200:
+          description: returns a greeting
+          schema:
+            type: string
+            description: contains actual string
+  /new:  
+    post:
+      parameters:
+        - name: customer
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/customer'
+      operationId: postGreeting
+      produces:
+        - text/plain
+      responses:
+        201:
+          description: Customer posted
+
+definitions:
+  customer:
+    type: object
+    properties: 
+      id:
+        type: integer
+      name:
+        type: string
