@@ -20,9 +20,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewCustomerAPI creates a new Customer instance
-func NewCustomerAPI(spec *loads.Document) *CustomerAPI {
-	return &CustomerAPI{
+// NewAuthSampleAPI creates a new AuthSample instance
+func NewAuthSampleAPI(spec *loads.Document) *AuthSampleAPI {
+	return &AuthSampleAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -47,8 +47,8 @@ func NewCustomerAPI(spec *loads.Document) *CustomerAPI {
 	}
 }
 
-/*CustomerAPI the customer API */
-type CustomerAPI struct {
+/*AuthSampleAPI the auth sample API */
+type AuthSampleAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -98,42 +98,42 @@ type CustomerAPI struct {
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *CustomerAPI) SetDefaultProduces(mediaType string) {
+func (o *AuthSampleAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *CustomerAPI) SetDefaultConsumes(mediaType string) {
+func (o *AuthSampleAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *CustomerAPI) SetSpec(spec *loads.Document) {
+func (o *AuthSampleAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *CustomerAPI) DefaultProduces() string {
+func (o *AuthSampleAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *CustomerAPI) DefaultConsumes() string {
+func (o *AuthSampleAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *CustomerAPI) Formats() strfmt.Registry {
+func (o *AuthSampleAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *CustomerAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *AuthSampleAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the CustomerAPI
-func (o *CustomerAPI) Validate() error {
+// Validate validates the registrations in the AuthSampleAPI
+func (o *AuthSampleAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -164,26 +164,26 @@ func (o *CustomerAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *CustomerAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *AuthSampleAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *CustomerAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *AuthSampleAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
 	return nil
 
 }
 
 // Authorizer returns the registered authorizer
-func (o *CustomerAPI) Authorizer() runtime.Authorizer {
+func (o *AuthSampleAPI) Authorizer() runtime.Authorizer {
 
 	return nil
 
 }
 
 // ConsumersFor gets the consumers for the specified media types
-func (o *CustomerAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *AuthSampleAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 
 	result := make(map[string]runtime.Consumer)
 	for _, mt := range mediaTypes {
@@ -203,7 +203,7 @@ func (o *CustomerAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consu
 }
 
 // ProducersFor gets the producers for the specified media types
-func (o *CustomerAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *AuthSampleAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 
 	result := make(map[string]runtime.Producer)
 	for _, mt := range mediaTypes {
@@ -226,7 +226,7 @@ func (o *CustomerAPI) ProducersFor(mediaTypes []string) map[string]runtime.Produ
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *CustomerAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *AuthSampleAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -241,8 +241,8 @@ func (o *CustomerAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the customer API
-func (o *CustomerAPI) Context() *middleware.Context {
+// Context returns the middleware context for the auth sample API
+func (o *AuthSampleAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -250,7 +250,7 @@ func (o *CustomerAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *CustomerAPI) initHandlerCache() {
+func (o *AuthSampleAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 
 	if o.handlers == nil {
@@ -271,7 +271,7 @@ func (o *CustomerAPI) initHandlerCache() {
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *CustomerAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *AuthSampleAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -281,18 +281,18 @@ func (o *CustomerAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *CustomerAPI) Init() {
+func (o *AuthSampleAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *CustomerAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *AuthSampleAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *CustomerAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *AuthSampleAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }

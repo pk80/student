@@ -4,22 +4,24 @@ package restapi
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/go-swagger/go-swagger/examples/oauth2/models"
 
 	"github.com/pk80/student/customeServer2/gen/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../gen --name Customer --spec ../../swagger/swagger.yml
+//go:generate swagger generate server --target ../../gen --name AuthSample --spec ../../swagger/swagger.yml --principal models.Principal
 
-func configureFlags(api *operations.CustomerAPI) {
+func configureFlags(api *operations.AuthSampleAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.CustomerAPI) http.Handler {
+func configureAPI(api *operations.AuthSampleAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -27,13 +29,23 @@ func configureAPI(api *operations.CustomerAPI) http.Handler {
 	// Expected interface func(string, ...interface{})
 	//
 	// Example:
-	// api.Logger = log.Printf
+	api.Logger = log.Printf
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
 
 	api.TxtProducer = runtime.TextProducer()
+
+	// Applies when the "x-token" header is set
+	api.KeyAuth = func(token string) (*models.Principal, error) {
+		if token == "abcdefuvwxyz" {
+			prin := models.Principal(token)
+			return &prin, nil
+		}
+		api.Logger("Access attempt with incorrect api key auth: %s", token)
+		return nil, errors.New(401, "incorrect api key auth")
+	}
 
 	if api.GetCustomerHandler == nil {
 		api.GetCustomerHandler = operations.GetCustomerHandlerFunc(func(params operations.GetCustomerParams) middleware.Responder {

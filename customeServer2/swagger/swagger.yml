@@ -50,3 +50,4 @@ definitions:
         type: integer
       name:
         type: string
+
