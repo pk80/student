@@ -34,7 +34,7 @@ type GetBulkParams struct {
 
 	/*
 	  Required: true
-	  Pattern: ^([0-9]{4})([0])([123456789])|([0-9]{4})([1])([12])$
+	  Pattern: ^\d{6}$
 	  In: query
 	*/
 	Month string
@@ -100,7 +100,7 @@ func (o *GetBulkParams) bindMonth(rawData []string, hasKey bool, formats strfmt.
 // validateMonth carries on validations for parameter Month
 func (o *GetBulkParams) validateMonth(formats strfmt.Registry) error {
 
-	if err := validate.Pattern("month", "query", o.Month, `^([0-9]{4})([0])([123456789])|([0-9]{4})([1])([12])$`); err != nil {
+	if err := validate.Pattern("month", "query", o.Month, `^\d{6}$`); err != nil {
 		return err
 	}
 

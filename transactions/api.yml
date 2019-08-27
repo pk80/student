@@ -47,7 +47,7 @@ paths:
         - in: query
           name: month
           type: string
-          pattern: '^([0-9]{4})([0])([123456789])|([0-9]{4})([1])([12])$'
+          pattern: '^\d{6}$'
           required: true
         - in: query
           name: source
@@ -79,8 +79,6 @@ paths:
       responses:
         200:
           description: OK
-          schema:
-            $ref: '#/definitions/successMsg'
         204:
           description: Deleted
         400:
@@ -123,7 +121,7 @@ paths:
           schema:
             $ref: '#/definitions/txData'
         500:
-          description: Internal Server Error
+          description: Internal Server Error   
     put:
       tags: [bofa-chk]
       operationId: bofaChkUpdate 
@@ -146,109 +144,7 @@ paths:
         200:
           description: OK
         500:
-          description: Internal Server Error
-  /cat/:
-    post:
-      tags: [cat]
-      operationId: importCat
-      description: Upload categories file in csv format and append to `catFileList` and post `cat` into `catData`
-      parameters:
-        - in: formData
-          name: csvfile
-          type: file
-          format: text/csv
-          required: true
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/catFileList'
-        400:
-          description: Bad Request
-        500:
-          description: Internal Server Error
-    get:
-      tags: [cat]
-      operationId: getBulkCat
-      description: Get all the Category records `catList` into the database `catData`
-      parameters:
-        - in: body
-          name: catList
-          schema:
-            $ref: '#/definitions/catList'
-          required: true
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/catData'
-        500:
-          description: Internal Server Error
-  /cat/{id}:
-    get:
-      tags: [cat]
-      operationId: getCat 
-      description: Get single Category record details by matching `id` 
-      parameters:
-        - in: path
-          name: id
-          type: integer
-          required: true
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/cat'
-        400:
-          description: Bad Request
-        404:
-          description: Not found
-        500:
-          description: Internal Server Error
-    delete:
-      tags: [cat]
-      operationId: deleteCat
-      description: Delete single Category record by matching `id`
-      parameters:
-        - in: path
-          name: id
-          type: integer
-          required: true
-      responses:
-        200:
-          description: OK
-        204:
-          description: Deleted
-        400:
-          description: Bad Request
-        500:
-          description: Internal Server Error
-  /cat:
-    delete:
-      tags: [cat]
-      operationId: deleteBulk 
-      description: Delete all category related transaction in bulk
-      parameters:
-        - in: body
-          name: catList
-          required: true
-          schema:
-            $ref: '#/definitions/catList'
-      responses:
-        200:
-          description: OK
-        201:
-          description: Created
-          schema:
-            $ref: '#/definitions/cat'
-        204:
-          description: No Content
-        206:
-          description: Partial Content
-          schema:
-            $ref: '#/definitions/cat'
-        500:
-          description: Internal Server Error
+          description: Internal Server Error     
 
 definitions:
   transaction:
@@ -284,71 +180,9 @@ definitions:
           type: integer
         sync:
           type: string
-  cat:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: auto
-      code:
-        type: integer
-      cat:
-        type: string
-      subCat:
-        type: string
-      expFor:
-        type: string
-      frequency:
-        type: string
-      volatility:
-        type: string
-      possibleTagsStr:
-        type: string
-        format: binary
-  catList:
-    type: array
-    items:
-      $ref: '#/definitions/cat'
-  catData:
-    type: array
-    items:
-      type: object
-      properties:
-        data:
-          $ref: '#/definitions/catList'
-        lastId:
-          type: integer
-        sync:
-          type: string
-  catFile:
-    type: object
-    properties:
-      code:
-        type: string
-      cat:
-        type: string
-      subCat:
-        type: string
-      expFor:
-        type: string
-      frequency:
-        type: string
-      volatility:
-        type: string
-      possibleTagsStr:
-        type: string
-  catFileList:
-    type: array
-    items:
-      $ref: '#/definitions/catFile'
-  successMsg:
-    type: string
-    example: 'Operation Successfull'
 
 tags:
   - name: tx
     description: All transactions
   - name: bofa-chk
     description: All BOFA cheque related transactions
-  - name: cat
-    description: All Categories related to transactions

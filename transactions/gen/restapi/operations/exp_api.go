@@ -19,14 +19,13 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/pk80/student/transactions/restapi/operations/bofa_chk"
-	"github.com/pk80/student/transactions/restapi/operations/cat"
-	"github.com/pk80/student/transactions/restapi/operations/tx"
+	"github.com/pk80/student/transactions/gen/restapi/operations/bofa_chk"
+	"github.com/pk80/student/transactions/gen/restapi/operations/tx"
 )
 
-// NewTransactionsAPI creates a new Transactions instance
-func NewTransactionsAPI(spec *loads.Document) *TransactionsAPI {
-	return &TransactionsAPI{
+// NewExpAPI creates a new Exp instance
+func NewExpAPI(spec *loads.Document) *ExpAPI {
+	return &ExpAPI{
 		handlers:              make(map[string]map[string]http.Handler),
 		formats:               strfmt.Default,
 		defaultConsumes:       "application/json",
@@ -51,32 +50,17 @@ func NewTransactionsAPI(spec *loads.Document) *TransactionsAPI {
 		TxDeleteHandler: tx.DeleteHandlerFunc(func(params tx.DeleteParams) middleware.Responder {
 			return middleware.NotImplemented("operation TxDelete has not yet been implemented")
 		}),
-		CatDeleteBulkHandler: cat.DeleteBulkHandlerFunc(func(params cat.DeleteBulkParams) middleware.Responder {
-			return middleware.NotImplemented("operation CatDeleteBulk has not yet been implemented")
-		}),
-		CatDeleteCatHandler: cat.DeleteCatHandlerFunc(func(params cat.DeleteCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation CatDeleteCat has not yet been implemented")
-		}),
 		TxGetHandler: tx.GetHandlerFunc(func(params tx.GetParams) middleware.Responder {
 			return middleware.NotImplemented("operation TxGet has not yet been implemented")
 		}),
 		TxGetBulkHandler: tx.GetBulkHandlerFunc(func(params tx.GetBulkParams) middleware.Responder {
 			return middleware.NotImplemented("operation TxGetBulk has not yet been implemented")
 		}),
-		CatGetBulkCatHandler: cat.GetBulkCatHandlerFunc(func(params cat.GetBulkCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation CatGetBulkCat has not yet been implemented")
-		}),
-		CatGetCatHandler: cat.GetCatHandlerFunc(func(params cat.GetCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation CatGetCat has not yet been implemented")
-		}),
-		CatImportCatHandler: cat.ImportCatHandlerFunc(func(params cat.ImportCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation CatImportCat has not yet been implemented")
-		}),
 	}
 }
 
-/*TransactionsAPI This is a sample api for all sorts of transactions. And all transactions are categorized based upon type of account operation. >>TODO<< */
-type TransactionsAPI struct {
+/*ExpAPI This is a sample api for all sorts of transactions. And all transactions are categorized based upon type of account operation. >>TODO<< */
+type ExpAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -111,20 +95,10 @@ type TransactionsAPI struct {
 	BofaChkBofaChkUpdateHandler bofa_chk.BofaChkUpdateHandler
 	// TxDeleteHandler sets the operation handler for the delete operation
 	TxDeleteHandler tx.DeleteHandler
-	// CatDeleteBulkHandler sets the operation handler for the delete bulk operation
-	CatDeleteBulkHandler cat.DeleteBulkHandler
-	// CatDeleteCatHandler sets the operation handler for the delete cat operation
-	CatDeleteCatHandler cat.DeleteCatHandler
 	// TxGetHandler sets the operation handler for the get operation
 	TxGetHandler tx.GetHandler
 	// TxGetBulkHandler sets the operation handler for the get bulk operation
 	TxGetBulkHandler tx.GetBulkHandler
-	// CatGetBulkCatHandler sets the operation handler for the get bulk cat operation
-	CatGetBulkCatHandler cat.GetBulkCatHandler
-	// CatGetCatHandler sets the operation handler for the get cat operation
-	CatGetCatHandler cat.GetCatHandler
-	// CatImportCatHandler sets the operation handler for the import cat operation
-	CatImportCatHandler cat.ImportCatHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -142,42 +116,42 @@ type TransactionsAPI struct {
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *TransactionsAPI) SetDefaultProduces(mediaType string) {
+func (o *ExpAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *TransactionsAPI) SetDefaultConsumes(mediaType string) {
+func (o *ExpAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *TransactionsAPI) SetSpec(spec *loads.Document) {
+func (o *ExpAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *TransactionsAPI) DefaultProduces() string {
+func (o *ExpAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *TransactionsAPI) DefaultConsumes() string {
+func (o *ExpAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *TransactionsAPI) Formats() strfmt.Registry {
+func (o *ExpAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *TransactionsAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *ExpAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the TransactionsAPI
-func (o *TransactionsAPI) Validate() error {
+// Validate validates the registrations in the ExpAPI
+func (o *ExpAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -204,32 +178,12 @@ func (o *TransactionsAPI) Validate() error {
 		unregistered = append(unregistered, "tx.DeleteHandler")
 	}
 
-	if o.CatDeleteBulkHandler == nil {
-		unregistered = append(unregistered, "cat.DeleteBulkHandler")
-	}
-
-	if o.CatDeleteCatHandler == nil {
-		unregistered = append(unregistered, "cat.DeleteCatHandler")
-	}
-
 	if o.TxGetHandler == nil {
 		unregistered = append(unregistered, "tx.GetHandler")
 	}
 
 	if o.TxGetBulkHandler == nil {
 		unregistered = append(unregistered, "tx.GetBulkHandler")
-	}
-
-	if o.CatGetBulkCatHandler == nil {
-		unregistered = append(unregistered, "cat.GetBulkCatHandler")
-	}
-
-	if o.CatGetCatHandler == nil {
-		unregistered = append(unregistered, "cat.GetCatHandler")
-	}
-
-	if o.CatImportCatHandler == nil {
-		unregistered = append(unregistered, "cat.ImportCatHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -240,26 +194,26 @@ func (o *TransactionsAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *TransactionsAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *ExpAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *TransactionsAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *ExpAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
 	return nil
 
 }
 
 // Authorizer returns the registered authorizer
-func (o *TransactionsAPI) Authorizer() runtime.Authorizer {
+func (o *ExpAPI) Authorizer() runtime.Authorizer {
 
 	return nil
 
 }
 
 // ConsumersFor gets the consumers for the specified media types
-func (o *TransactionsAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *ExpAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 
 	result := make(map[string]runtime.Consumer)
 	for _, mt := range mediaTypes {
@@ -282,7 +236,7 @@ func (o *TransactionsAPI) ConsumersFor(mediaTypes []string) map[string]runtime.C
 }
 
 // ProducersFor gets the producers for the specified media types
-func (o *TransactionsAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *ExpAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 
 	result := make(map[string]runtime.Producer)
 	for _, mt := range mediaTypes {
@@ -302,7 +256,7 @@ func (o *TransactionsAPI) ProducersFor(mediaTypes []string) map[string]runtime.P
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *TransactionsAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *ExpAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -317,8 +271,8 @@ func (o *TransactionsAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the transactions API
-func (o *TransactionsAPI) Context() *middleware.Context {
+// Context returns the middleware context for the exp API
+func (o *ExpAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -326,7 +280,7 @@ func (o *TransactionsAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *TransactionsAPI) initHandlerCache() {
+func (o *ExpAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 
 	if o.handlers == nil {
@@ -348,16 +302,6 @@ func (o *TransactionsAPI) initHandlerCache() {
 	}
 	o.handlers["DELETE"]["/tx"] = tx.NewDelete(o.context, o.TxDeleteHandler)
 
-	if o.handlers["DELETE"] == nil {
-		o.handlers["DELETE"] = make(map[string]http.Handler)
-	}
-	o.handlers["DELETE"]["/cat"] = cat.NewDeleteBulk(o.context, o.CatDeleteBulkHandler)
-
-	if o.handlers["DELETE"] == nil {
-		o.handlers["DELETE"] = make(map[string]http.Handler)
-	}
-	o.handlers["DELETE"]["/cat/{id}"] = cat.NewDeleteCat(o.context, o.CatDeleteCatHandler)
-
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -368,26 +312,11 @@ func (o *TransactionsAPI) initHandlerCache() {
 	}
 	o.handlers["GET"]["/tx"] = tx.NewGetBulk(o.context, o.TxGetBulkHandler)
 
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/cat"] = cat.NewGetBulkCat(o.context, o.CatGetBulkCatHandler)
-
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/cat/{id}"] = cat.NewGetCat(o.context, o.CatGetCatHandler)
-
-	if o.handlers["POST"] == nil {
-		o.handlers["POST"] = make(map[string]http.Handler)
-	}
-	o.handlers["POST"]["/cat"] = cat.NewImportCat(o.context, o.CatImportCatHandler)
-
 }
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *TransactionsAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *ExpAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -397,18 +326,18 @@ func (o *TransactionsAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *TransactionsAPI) Init() {
+func (o *ExpAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *TransactionsAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *ExpAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *TransactionsAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *ExpAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }

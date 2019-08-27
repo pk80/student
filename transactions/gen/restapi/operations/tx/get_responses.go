@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "github.com/pk80/student/transactions/models"
+	models "github.com/pk80/student/transactions/gen/models"
 )
 
 // GetOKCode is the HTTP code returned for type GetOK

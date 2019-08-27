@@ -9,8 +9,6 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
-
-	models "github.com/pk80/student/transactions/models"
 )
 
 // DeleteOKCode is the HTTP code returned for type DeleteOK
@@ -21,11 +19,6 @@ const DeleteOKCode int = 200
 swagger:response deleteOK
 */
 type DeleteOK struct {
-
-	/*
-	  In: Body
-	*/
-	Payload models.SuccessMsg `json:"body,omitempty"`
 }
 
 // NewDeleteOK creates DeleteOK with default headers values
@@ -34,25 +27,12 @@ func NewDeleteOK() *DeleteOK {
 	return &DeleteOK{}
 }
 
-// WithPayload adds the payload to the delete o k response
-func (o *DeleteOK) WithPayload(payload models.SuccessMsg) *DeleteOK {
-	o.Payload = payload
-	return o
-}
-
-// SetPayload sets the payload to the delete o k response
-func (o *DeleteOK) SetPayload(payload models.SuccessMsg) {
-	o.Payload = payload
-}
-
 // WriteResponse to the client
 func (o *DeleteOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
+	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
+
 	rw.WriteHeader(200)
-	payload := o.Payload
-	if err := producer.Produce(rw, payload); err != nil {
-		panic(err) // let the recovery middleware deal with this
-	}
 }
 
 // DeleteNoContentCode is the HTTP code returned for type DeleteNoContent

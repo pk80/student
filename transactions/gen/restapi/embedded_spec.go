@@ -47,171 +47,6 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/",
   "paths": {
-    "/cat": {
-      "delete": {
-        "description": "Delete all category related transaction in bulk",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "deleteBulk",
-        "parameters": [
-          {
-            "name": "catList",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/catList"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/cat"
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "206": {
-            "description": "Partial Content",
-            "schema": {
-              "$ref": "#/definitions/cat"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/cat/": {
-      "get": {
-        "description": "Get all the Category records ` + "`" + `catList` + "`" + ` into the database ` + "`" + `catData` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "getBulkCat",
-        "parameters": [
-          {
-            "name": "catList",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/catList"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/catData"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "post": {
-        "description": "Upload categories file in csv format and append to ` + "`" + `catFileList` + "`" + ` and post ` + "`" + `cat` + "`" + ` into ` + "`" + `catData` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "importCat",
-        "parameters": [
-          {
-            "type": "file",
-            "format": "text/csv",
-            "name": "csvfile",
-            "in": "formData",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/catFileList"
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/cat/{id}": {
-      "get": {
-        "description": "Get single Category record details by matching ` + "`" + `id` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "getCat",
-        "parameters": [
-          {
-            "type": "integer",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/cat"
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "description": "Delete single Category record by matching ` + "`" + `id` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "deleteCat",
-        "parameters": [
-          {
-            "type": "integer",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "204": {
-            "description": "Deleted"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/tx": {
       "get": {
         "description": "Get transactions for the given ` + "`" + `month` + "`" + `, ` + "`" + `year` + "`" + ` and ` + "`" + `source` + "`" + ` from ` + "`" + `txData` + "`" + `",
@@ -221,7 +56,7 @@ func init() {
         "operationId": "getBulk",
         "parameters": [
           {
-            "pattern": "^([0-9]{4})([0])([123456789])|([0-9]{4})([1])([12])$",
+            "pattern": "^\\d{6}$",
             "type": "string",
             "name": "month",
             "in": "query",
@@ -272,10 +107,7 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/successMsg"
-            }
+            "description": "OK"
           },
           "204": {
             "description": "Deleted"
@@ -387,96 +219,6 @@ func init() {
     }
   },
   "definitions": {
-    "cat": {
-      "type": "object",
-      "properties": {
-        "cat": {
-          "type": "string"
-        },
-        "code": {
-          "type": "integer"
-        },
-        "expFor": {
-          "type": "string"
-        },
-        "frequency": {
-          "type": "string"
-        },
-        "id": {
-          "type": "integer",
-          "format": "auto"
-        },
-        "possibleTagsStr": {
-          "type": "string",
-          "format": "binary"
-        },
-        "subCat": {
-          "type": "string"
-        },
-        "volatility": {
-          "type": "string"
-        }
-      }
-    },
-    "catData": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "$ref": "#/definitions/catList"
-          },
-          "lastId": {
-            "type": "integer"
-          },
-          "sync": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "catFile": {
-      "type": "object",
-      "properties": {
-        "cat": {
-          "type": "string"
-        },
-        "code": {
-          "type": "string"
-        },
-        "expFor": {
-          "type": "string"
-        },
-        "frequency": {
-          "type": "string"
-        },
-        "possibleTagsStr": {
-          "type": "string"
-        },
-        "subCat": {
-          "type": "string"
-        },
-        "volatility": {
-          "type": "string"
-        }
-      }
-    },
-    "catFileList": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/catFile"
-      }
-    },
-    "catList": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/cat"
-      }
-    },
-    "successMsg": {
-      "type": "string",
-      "example": "Operation Successfull"
-    },
     "transaction": {
       "type": "object",
       "properties": {
@@ -536,10 +278,6 @@ func init() {
     {
       "description": "All BOFA cheque related transactions",
       "name": "bofa-chk"
-    },
-    {
-      "description": "All Categories related to transactions",
-      "name": "cat"
     }
   ]
 }`))
@@ -573,171 +311,6 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/",
   "paths": {
-    "/cat": {
-      "delete": {
-        "description": "Delete all category related transaction in bulk",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "deleteBulk",
-        "parameters": [
-          {
-            "name": "catList",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/catList"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "201": {
-            "description": "Created",
-            "schema": {
-              "$ref": "#/definitions/cat"
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "206": {
-            "description": "Partial Content",
-            "schema": {
-              "$ref": "#/definitions/cat"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/cat/": {
-      "get": {
-        "description": "Get all the Category records ` + "`" + `catList` + "`" + ` into the database ` + "`" + `catData` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "getBulkCat",
-        "parameters": [
-          {
-            "name": "catList",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/catList"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/catData"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "post": {
-        "description": "Upload categories file in csv format and append to ` + "`" + `catFileList` + "`" + ` and post ` + "`" + `cat` + "`" + ` into ` + "`" + `catData` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "importCat",
-        "parameters": [
-          {
-            "type": "file",
-            "format": "text/csv",
-            "name": "csvfile",
-            "in": "formData",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/catFileList"
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/cat/{id}": {
-      "get": {
-        "description": "Get single Category record details by matching ` + "`" + `id` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "getCat",
-        "parameters": [
-          {
-            "type": "integer",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/cat"
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not found"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      },
-      "delete": {
-        "description": "Delete single Category record by matching ` + "`" + `id` + "`" + `",
-        "tags": [
-          "cat"
-        ],
-        "operationId": "deleteCat",
-        "parameters": [
-          {
-            "type": "integer",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "204": {
-            "description": "Deleted"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
     "/tx": {
       "get": {
         "description": "Get transactions for the given ` + "`" + `month` + "`" + `, ` + "`" + `year` + "`" + ` and ` + "`" + `source` + "`" + ` from ` + "`" + `txData` + "`" + `",
@@ -747,7 +320,7 @@ func init() {
         "operationId": "getBulk",
         "parameters": [
           {
-            "pattern": "^([0-9]{4})([0])([123456789])|([0-9]{4})([1])([12])$",
+            "pattern": "^\\d{6}$",
             "type": "string",
             "name": "month",
             "in": "query",
@@ -798,10 +371,7 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/successMsg"
-            }
+            "description": "OK"
           },
           "204": {
             "description": "Deleted"
@@ -913,96 +483,6 @@ func init() {
     }
   },
   "definitions": {
-    "cat": {
-      "type": "object",
-      "properties": {
-        "cat": {
-          "type": "string"
-        },
-        "code": {
-          "type": "integer"
-        },
-        "expFor": {
-          "type": "string"
-        },
-        "frequency": {
-          "type": "string"
-        },
-        "id": {
-          "type": "integer",
-          "format": "auto"
-        },
-        "possibleTagsStr": {
-          "type": "string",
-          "format": "binary"
-        },
-        "subCat": {
-          "type": "string"
-        },
-        "volatility": {
-          "type": "string"
-        }
-      }
-    },
-    "catData": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "$ref": "#/definitions/catList"
-          },
-          "lastId": {
-            "type": "integer"
-          },
-          "sync": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "catFile": {
-      "type": "object",
-      "properties": {
-        "cat": {
-          "type": "string"
-        },
-        "code": {
-          "type": "string"
-        },
-        "expFor": {
-          "type": "string"
-        },
-        "frequency": {
-          "type": "string"
-        },
-        "possibleTagsStr": {
-          "type": "string"
-        },
-        "subCat": {
-          "type": "string"
-        },
-        "volatility": {
-          "type": "string"
-        }
-      }
-    },
-    "catFileList": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/catFile"
-      }
-    },
-    "catList": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/cat"
-      }
-    },
-    "successMsg": {
-      "type": "string",
-      "example": "Operation Successfull"
-    },
     "transaction": {
       "type": "object",
       "properties": {
@@ -1062,10 +542,6 @@ func init() {
     {
       "description": "All BOFA cheque related transactions",
       "name": "bofa-chk"
-    },
-    {
-      "description": "All Categories related to transactions",
-      "name": "cat"
     }
   ]
 }`))

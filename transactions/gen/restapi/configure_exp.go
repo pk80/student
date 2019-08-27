@@ -10,19 +10,18 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 
-	"github.com/pk80/student/transactions/restapi/operations"
-	"github.com/pk80/student/transactions/restapi/operations/bofa_chk"
-	"github.com/pk80/student/transactions/restapi/operations/cat"
-	"github.com/pk80/student/transactions/restapi/operations/tx"
+	"github.com/pk80/student/transactions/gen/restapi/operations"
+	"github.com/pk80/student/transactions/gen/restapi/operations/bofa_chk"
+	"github.com/pk80/student/transactions/gen/restapi/operations/tx"
 )
 
-//go:generate swagger generate server --target ../../transactions --name Transactions --spec ../api.yml
+//go:generate swagger generate server --target ../../gen --name Exp --spec ../../api.yml --exclude-main
 
-func configureFlags(api *operations.TransactionsAPI) {
+func configureFlags(api *operations.ExpAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.TransactionsAPI) http.Handler {
+func configureAPI(api *operations.ExpAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -53,16 +52,6 @@ func configureAPI(api *operations.TransactionsAPI) http.Handler {
 			return middleware.NotImplemented("operation tx.Delete has not yet been implemented")
 		})
 	}
-	if api.CatDeleteBulkHandler == nil {
-		api.CatDeleteBulkHandler = cat.DeleteBulkHandlerFunc(func(params cat.DeleteBulkParams) middleware.Responder {
-			return middleware.NotImplemented("operation cat.DeleteBulk has not yet been implemented")
-		})
-	}
-	if api.CatDeleteCatHandler == nil {
-		api.CatDeleteCatHandler = cat.DeleteCatHandlerFunc(func(params cat.DeleteCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation cat.DeleteCat has not yet been implemented")
-		})
-	}
 	if api.TxGetHandler == nil {
 		api.TxGetHandler = tx.GetHandlerFunc(func(params tx.GetParams) middleware.Responder {
 			return middleware.NotImplemented("operation tx.Get has not yet been implemented")
@@ -71,21 +60,6 @@ func configureAPI(api *operations.TransactionsAPI) http.Handler {
 	if api.TxGetBulkHandler == nil {
 		api.TxGetBulkHandler = tx.GetBulkHandlerFunc(func(params tx.GetBulkParams) middleware.Responder {
 			return middleware.NotImplemented("operation tx.GetBulk has not yet been implemented")
-		})
-	}
-	if api.CatGetBulkCatHandler == nil {
-		api.CatGetBulkCatHandler = cat.GetBulkCatHandlerFunc(func(params cat.GetBulkCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation cat.GetBulkCat has not yet been implemented")
-		})
-	}
-	if api.CatGetCatHandler == nil {
-		api.CatGetCatHandler = cat.GetCatHandlerFunc(func(params cat.GetCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation cat.GetCat has not yet been implemented")
-		})
-	}
-	if api.CatImportCatHandler == nil {
-		api.CatImportCatHandler = cat.ImportCatHandlerFunc(func(params cat.ImportCatParams) middleware.Responder {
-			return middleware.NotImplemented("operation cat.ImportCat has not yet been implemented")
 		})
 	}
 
