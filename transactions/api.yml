@@ -1,0 +1,354 @@
+# Issue:20 [swagger] task 1
+# h.HandleFunc("/tx", tx.GetBulkHandler).Methods("GET")
+# h.HandleFunc("/tx/bofa-chk/", tx.BofaChkImportHandler).Methods("POST")
+# Issue:21 [swagger] task 2
+# h.HandleFunc("/tx/bofa-chk/", tx.BofaChkUpdateHandler).Methods("PUT")
+# h.HandleFunc("/tx", tx.DeleteHandler).Methods("DELETE")
+# h.HandleFunc("/tx/{id}", tx.GetHandler).Methods("GET")
+# Issue:23 [swagger] task 3
+# h.HandleFunc("/cat/", cat.ImportHandler).Methods("POST")
+# h.HandleFunc("/cat/", cat.GetBulkHandler).Methods("GET")
+# h.HandleFunc("/cat/{id}", cat.GetHandler).Methods("GET")
+# h.HandleFunc("/cat/{id}", cat.DeleteHandler).Methods("DELETE")
+# h.HandleFunc("/cat", cat.DeleteBulkHandler).Methods("DELETE")
+---
+swagger: '2.0'
+info:
+  title: Transactions
+  version: '0.0.1'
+  description: This is a sample api for all sorts of transactions. And all transactions are categorized based upon type of account operation. >>TODO<<
+  termsOfService: https://www.atlassian.com/legal/cloud-terms-of-service
+  contact:
+    name: Developer
+    url: https://user@bitbucket.org
+    email: developer@email.com
+  license:
+    name: License
+    url: https://user@bitbucket.org
+
+schemes:
+  - http
+host: localhost:8080
+basePath: /
+
+consumes:
+  - application/json
+  - multipart/form-data
+produces:
+  - application/json
+      
+paths:
+  /tx:
+    get:
+      tags: [tx]
+      operationId: getBulk
+      description: Get transactions for the given `month`, `year` and `source` from `txData`
+      parameters:
+        - in: query
+          name: month
+          type: string
+          pattern: '^([0-9]{4})([0])([123456789])|([0-9]{4})([1])([12])$'
+          required: true
+        - in: query
+          name: source
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transactions'
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+    delete:
+      tags: [tx]
+      operationId: delete
+      description: Delete transactions by `month`, `year` and `source`
+      parameters:
+        - in: query
+          name: month
+          type: string
+          pattern: '^([0-9]{4})([0])([123456789])|([0-9]{4})([1])([12])$'
+          required: true
+        - in: query
+          name: source
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/successMsg'
+        204:
+          description: Deleted
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+  /tx/{id}:
+    get:
+      tags: [tx]
+      operationId: get 
+      description: Get transaction details by matching with `id` 
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/transaction'
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+  /tx/bofa-chk/:
+    post:
+      tags: [bofa-chk]
+      operationId: bofaChkImport
+      description: Upload transactions for bofa-chk in csv format and append to `txData`
+      parameters:
+        - in: formData
+          name: csvfile
+          type: file
+          format: text/csv
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/txData'
+        500:
+          description: Internal Server Error
+    put:
+      tags: [bofa-chk]
+      operationId: bofaChkUpdate 
+      description: Update transaction details for bofa-chk by uploading a file by referencing to `lastId`
+      parameters:
+        - in: formData
+          name: upfile
+          type: file
+          format: text/csv
+          required: true
+        - in: query
+          name: lastId
+          type: integer
+          required: true
+        - in: query
+          name: source
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+        500:
+          description: Internal Server Error
+  /cat/:
+    post:
+      tags: [cat]
+      operationId: importCat
+      description: Upload categories file in csv format and append to `catFileList` and post `cat` into `catData`
+      parameters:
+        - in: formData
+          name: csvfile
+          type: file
+          format: text/csv
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/catFileList'
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+    get:
+      tags: [cat]
+      operationId: getBulkCat
+      description: Get all the Category records `catList` into the database `catData`
+      parameters:
+        - in: body
+          name: catList
+          schema:
+            $ref: '#/definitions/catList'
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/catData'
+        500:
+          description: Internal Server Error
+  /cat/{id}:
+    get:
+      tags: [cat]
+      operationId: getCat 
+      description: Get single Category record details by matching `id` 
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/cat'
+        400:
+          description: Bad Request
+        404:
+          description: Not found
+        500:
+          description: Internal Server Error
+    delete:
+      tags: [cat]
+      operationId: deleteCat
+      description: Delete single Category record by matching `id`
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+        204:
+          description: Deleted
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+  /cat:
+    delete:
+      tags: [cat]
+      operationId: deleteBulk 
+      description: Delete all category related transaction in bulk
+      parameters:
+        - in: body
+          name: catList
+          required: true
+          schema:
+            $ref: '#/definitions/catList'
+      responses:
+        200:
+          description: OK
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/cat'
+        204:
+          description: No Content
+        206:
+          description: Partial Content
+          schema:
+            $ref: '#/definitions/cat'
+        500:
+          description: Internal Server Error
+
+definitions:
+  transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date
+        description:
+          type: string
+        amount:
+          type: number
+        notes:
+          type: string
+        source:
+          type: string
+        user:
+          type: string
+  transactions:
+    type: array
+    items:
+      $ref: '#/definitions/transaction'
+  txData:
+    type: array
+    items:
+      type: object
+      properties:
+        data:
+          $ref: '#/definitions/transaction'
+        lastId:
+          type: integer
+        sync:
+          type: string
+  cat:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: auto
+      code:
+        type: integer
+      cat:
+        type: string
+      subCat:
+        type: string
+      expFor:
+        type: string
+      frequency:
+        type: string
+      volatility:
+        type: string
+      possibleTagsStr:
+        type: string
+        format: binary
+  catList:
+    type: array
+    items:
+      $ref: '#/definitions/cat'
+  catData:
+    type: array
+    items:
+      type: object
+      properties:
+        data:
+          $ref: '#/definitions/catList'
+        lastId:
+          type: integer
+        sync:
+          type: string
+  catFile:
+    type: object
+    properties:
+      code:
+        type: string
+      cat:
+        type: string
+      subCat:
+        type: string
+      expFor:
+        type: string
+      frequency:
+        type: string
+      volatility:
+        type: string
+      possibleTagsStr:
+        type: string
+  catFileList:
+    type: array
+    items:
+      $ref: '#/definitions/catFile'
+  successMsg:
+    type: string
+    example: 'Operation Successfull'
+
+tags:
+  - name: tx
+    description: All transactions
+  - name: bofa-chk
+    description: All BOFA cheque related transactions
+  - name: cat
+    description: All Categories related to transactions
