@@ -1,9 +1,21 @@
 ---
 swagger: '2.0'
 info:
-  version: 1.0.0
-  title: Sample API
-  description: A sample API to demonstrate how to write OpenAPI Specification.
+  $ref: './info.yml'
+  # version: 1.0.0
+  # title: Sample API
+  # description: |
+  #   A simple API to learn how to write OpenAPI Specification.
+  #   This file uses almost every single aspect of the [Open API Specification](https://openapis.org/).  
+  #   This API will use JSON.  
+  #   JSON looks like this:  
+
+  #   ```JSON
+  #   {
+  #     "key": "value",
+  #     "anotherKey": "anotherValue"
+  #   }
+  #   ```
 
 schemes: 
   - https
@@ -37,7 +49,8 @@ paths:
           in: body
           description: The person to create
           schema:
-            $ref: 'person.yml#/Person'
+            # $ref: '#/definitions/Person'
+            $ref: './person.yml#/Person'
       responses:
         204:
           description: Person succesfully created.
@@ -57,7 +70,8 @@ paths:
         200:
           description: A person.
           schema:
-            $ref: 'person.yml#/Person'
+            # $ref: '#/definitions/Person'
+            $ref: './person.yml#/Person'
         404:
           description: The person doesn't exist.
 
@@ -66,6 +80,8 @@ definitions:
   #   required:
   #     - username
   #   properties:
+  #     username:
+  #       type:  string
   #     firstName:
   #       type: string
   #     lastName:
@@ -73,4 +89,5 @@ definitions:
   Persons:
     type: array
     items:
-      $ref: '#/definitions/Person'
+      # $ref: '#/definitions/Person'
+      $ref: './person.yml#/Person'

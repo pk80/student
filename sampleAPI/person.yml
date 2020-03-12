@@ -1,10 +1,10 @@
-Person:
-  required:
-    - username
-  properties:
-    username:
-      type: string
-    firstName:
-      type: string
-    lastName:
-      type: string
+  Person:
+    required:
+      - username
+    properties:
+      username:
+        type:  string
+      firstName:
+        type: string
+      lastName:
+        type: string

@@ -13,4 +13,5 @@ func main() {
 	fmt.Println(math.Sqrt(2))
 
 	fmt.Println(strutil.Reverse("Correct"))
+	strutil.Printchar("Echo")
 }
